@@ -23,7 +23,6 @@ class TodoApp extends Component {
             const todoList = new TodoList({ todos });
             const todoListDOM = todoList.renderDOM();
             main.appendChild(todoListDOM);
-            console.log('here');
         }
         catch (err) {
             // display error...

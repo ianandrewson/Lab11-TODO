@@ -1,5 +1,6 @@
 import Component from '../Component.js';
 import TodoItem from './TodoItem.js';
+import { addTodo } from '../services/todo-api.js';
 
 class TodoList extends Component {
     
@@ -9,9 +10,18 @@ class TodoList extends Component {
         const onUpdate = this.props.onUpdate;
         const onRemove = this.props.onRemove;
 
+        const addTodoButton = list.querySelector('button');
+        addTodoButton.addEventListener('click', async event => {
+            event.preventDefault();
+            const todoToAdd = {
+                task: list.querySelector('input').value,
+                complete: false
+            };
+            await addTodo(todoToAdd);
+        });
+
         todos.forEach(todo => {
             const todoItem = new TodoItem({ todo });
-            console.log(todoItem);
             const todoItemDOM = todoItem.renderDOM();
             list.appendChild(todoItemDOM);
 
@@ -21,7 +31,11 @@ class TodoList extends Component {
     }
     renderHTML() {
         return /*html*/`
-            <section id="todo-list"></section>
+        <div class="todo-list">
+            <input type="text" id="add-todo">
+            <button>Add Todo</button>
+            <section></section>
+        <div>
         `;
     }
 }
