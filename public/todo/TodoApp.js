@@ -17,9 +17,12 @@ class TodoApp extends Component {
         const loading = new Loading({ loading: true });
         dom.appendChild(loading.renderDOM());
 
+
+
         // initial todo load:
         try {
-            
+            const todoArray = await getTodos();
+            console.log(todoArray);
         }
         catch (err) {
             // display error...
