@@ -1,4 +1,4 @@
-import TodoItem from '../todo-list/TodoItem.js';
+import TodoItem from '../todo/TodoItem.js';
 const test = QUnit.test;
 
 QUnit.module('Render Todo Item');
@@ -12,7 +12,10 @@ test('renders html from data', assert => {
     };
 
     const expected = /*html*/`
-        
+        <div class="todo-item">
+            <input type="checkbox" id=${todo.task} checked=${todo.complete}>
+            <p>${todo.task}</p>
+        </div>
     `;
 
     // act
