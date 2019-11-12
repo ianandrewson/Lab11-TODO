@@ -19,10 +19,11 @@ class TodoApp extends Component {
 
         // initial todo load:
         try {
-            const todoArray = await getTodos();
-            const todoList = new TodoList({ todoArray });
+            const todos = await getTodos();
+            const todoList = new TodoList({ todos });
             const todoListDOM = todoList.renderDOM();
             main.appendChild(todoListDOM);
+            console.log('here');
         }
         catch (err) {
             // display error...

@@ -3,20 +3,20 @@ import Component from '../Component.js';
 class TodoItem extends Component {
 
     onRender(dom) {
-        const todo = this.props.todo;
-        const onUpdate = this.props.onUpdate;
-        const onRemove = this.props.onRemove;
+        // const todo = this.props.todo;
+        // const onUpdate = this.props.onUpdate;
+        // const onRemove = this.props.onRemove;
 
         
     }
 
     renderHTML() {
-        const todo = this.props.todo;
+        const todoItem = this.props.todo;
 
         return /*html*/`
             <div class="todo-item">
-                <input type="checkbox" id=${todo.task} checked=${todo.complete}>
-                <p>${todo.task}</p>
+                <input type="checkbox" id=${todoItem.task} checked=${todoItem.complete}>
+                <p>${todoItem.task}</p>
             </div>
         `;
     }
