@@ -30,8 +30,16 @@ export async function addTodo(todo) {
     return data;
 }
 
-export function updateTodo(todo) {  
-    
+export async function updateTodo(todo) {  
+    const url = `${URL}/todos/${todo.id}`;
+    const data = await fetch(url, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(todo)
+    });
+    return data.json();
 }
 
 export function removeTodo(todoId) {  
