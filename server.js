@@ -8,7 +8,7 @@ const authRoutes = createAuthRoutes({
         return client.query(`
             SELECT id, hash
             FROM users
-            where email = $1;
+            WHERE email = $1;
         `,
         [email]
         ).then(result => result.rows[0]);
@@ -54,7 +54,8 @@ app.get('/api/todos', async (req, res) => {
         const result = await client.query(`
             SELECT *
             FROM todos
-        `);
+            WHERE user_id = $1
+        `, [req.userId]);
 
         res.json(result.rows);
     }
@@ -74,11 +75,12 @@ app.post('/api/todos', async (req, res) => {
         const result = await client.query(`
             INSERT INTO todos
                 (task,
-                complete)
-            VALUES($1, $2)
+                complete,
+                user_id)
+            VALUES($1, $2, $3)
             RETURNING *;
         `,
-        [todo.task, todo.complete]);
+        [todo.task, todo.complete, todo.user_id ? todo.user_id : req.userId]);
 
         res.json(result.rows[0]);
     }
@@ -90,6 +92,7 @@ app.post('/api/todos', async (req, res) => {
     }
 });
 
+//PROBABLY SOMETHING WRONG HERE, LIKELY WITH USER_ID AND REQ.USERID
 app.put('/api/todos/:id', async (req, res) => {
     const id = req.params.id;
     const todo = req.body;
@@ -101,8 +104,9 @@ app.put('/api/todos/:id', async (req, res) => {
                 task = $2,
                 complete = $3
             WHERE id = $1
+            && user_id = $4
             RETURNING *
-        `, [id, todo.task, todo.complete]);
+        `, [id, todo.task, todo.complete, req.userId]);
     
         //console.log(res.json(result.rows[0]));
         res.json(result.rows[0]);
@@ -113,7 +117,7 @@ app.put('/api/todos/:id', async (req, res) => {
             error: err.message || err
         });
     }
-});
+}); 
 
 app.delete('/api/todos/:id', async (req, res) => {
     // get the id that was passed in the route:
