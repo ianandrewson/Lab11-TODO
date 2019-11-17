@@ -14,7 +14,7 @@ class AddTodo extends Component {
             const returnedToDo = await onAdd(todoToAdd);
 
             try {
-                await onAdd(catType);
+                
                 // this only runs if no error:
                 form.reset();
                 document.activeElement.blur();

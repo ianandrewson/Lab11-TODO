@@ -17,7 +17,7 @@ class TodoApp extends Component {
         const loading = new Loading({ loading: true });
         dom.appendChild(loading.renderDOM());
 
-        const addField = new AddTodo({ 
+        const addField = new AddTodo({
             onAdd: async (todoToAdd) => {
                 loading.update({ loading: true });
                 try {

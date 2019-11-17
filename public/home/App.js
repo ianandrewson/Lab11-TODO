@@ -10,6 +10,8 @@ class App extends Component {
         const header = new Header();
         dom.prepend(header.renderDOM());
 
+        const user = localStorage.getItem('USER');
+
         const mainArea = dom.querySelector('main');
 
         const signUp = new SignUp({
@@ -29,7 +31,13 @@ class App extends Component {
 
         const signIn = new SignIn({
             onSignin: async credentials => {
-                await signin(credentials);
+                try {
+                    const loadedUser = await signin(credentials);
+                    success(loadedUser);
+                }
+                catch (err) {
+                    console.log(err);
+                }
             } });
         const signInDOM = signIn.renderDOM();
         mainArea.appendChild(signInDOM);

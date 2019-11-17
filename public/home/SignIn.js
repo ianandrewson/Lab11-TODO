@@ -7,7 +7,16 @@ class SignIn extends Component {
         const signInButton = dom.querySelector('#signin-submit');
         signInButton.addEventListener('click', () => {
             console.log('signin button clicked');
-            onSignin();
+
+            const email = dom.querySelector('input[name=signin-email]').value;
+            const password = dom.querySelector('input[name=signin-password').value;
+
+            const credentials = {
+                email,
+                password
+            };
+
+            onSignin(credentials);
         });
     }
     renderHTML(){

@@ -1,6 +1,20 @@
 import Component from '../Component.js';
 
 class Header extends Component {
+    onRender(dom){
+        const user = localStorage.getItem('USER');
+        if (user) {
+            const logoutButton = document.createElement('button');
+            logoutButton.textContent = 'logout';
+            dom.appendChild(logoutButton);
+            logoutButton.addEventListener('click', () => {
+                localStorage.removeItem('TOKEN');
+                localStorage.removeItem('USER');
+                this.update();
+
+            });
+        }
+    }
     renderHTML() {
         const title = this.props.title || 'Todos';
 
