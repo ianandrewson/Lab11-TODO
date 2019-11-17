@@ -44,14 +44,13 @@ export async function addTodo(todo) {
 
 export async function updateTodo(todo) {  
     const url = `${URL}/todos/${todo.id}`;
-    const data = await fetchWithError(url, {
+    return await fetchWithError(url, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(todo)
     });
-    return data.json();
 }
 
 export function removeTodo(todoId) {  

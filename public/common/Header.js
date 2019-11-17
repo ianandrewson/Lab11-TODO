@@ -11,6 +11,7 @@ class Header extends Component {
                 localStorage.removeItem('TOKEN');
                 localStorage.removeItem('USER');
                 this.update();
+                window.location = '/index.html';
 
             });
         }

@@ -96,6 +96,9 @@ app.put('/api/todos/:id', async (req, res) => {
     const id = req.params.id;
     const todo = req.body;
 
+    console.log('in the put route');
+    console.log(req.body);
+
     try {
         const result = await client.query(`
             UPDATE todos
@@ -103,9 +106,9 @@ app.put('/api/todos/:id', async (req, res) => {
                 task = $2,
                 complete = $3
             WHERE id = $1
-            && user_id = $4
+            
             RETURNING *
-        `, [id, todo.task, todo.complete, req.userId]);
+        `, [id, todo.task, todo.complete]);
     
         //console.log(res.json(result.rows[0]));
         res.json(result.rows[0]);
