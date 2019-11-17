@@ -6,3 +6,20 @@ main {
 .hero {
     width: 80vw;
 }
+
+.sign-area{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+label{
+    grid-column: 1;
+    margin: 5px;
+    justify-self: right;
+}
+input {
+    grid-column: 2;
+    justify-self: left;
+    margin: 5px;
+    width: 250px;
+}

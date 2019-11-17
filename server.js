@@ -1,6 +1,31 @@
 // Load Environment Variables from the .env file
 require('dotenv').config();
 
+const ensureAuth = require('./lib/auth/ensure-auth');
+const createAuthRoutes = require('./lib/auth/create-auth-routes');
+const authRoutes = createAuthRoutes({
+    selectUser(email) {
+        return client.query(`
+            SELECT id, hash
+            FROM users
+            WHERE email = $1;
+        `,
+        [email]
+        ).then(result => result.rows[0]);
+    },
+    insertUser(user, hash) {
+        return client.query(`
+            INSERT into users (email, hash)
+            VALUES ($1, $2)
+            RETURNING id, email;
+        `,
+        [user.email, hash]
+        ).then(result => result.rows[0]);
+    }
+});
+
+
+
 // Application Dependencies
 const express = require('express');
 const cors = require('cors');
@@ -16,6 +41,8 @@ app.use(morgan('dev')); // http logging
 app.use(cors()); // enable CORS request
 app.use(express.static('public')); // server files from /public folder
 app.use(express.json()); // enable reading incoming json data
+app.use('/api/auth', authRoutes);
+app.use('/api', ensureAuth);
 
 // API Routes
 
@@ -24,8 +51,10 @@ app.get('/api/todos', async (req, res) => {
 
     try {
         const result = await client.query(`
-            
-        `);
+            SELECT *
+            FROM todos
+            WHERE user_id = $1
+        `, [req.userId]);
 
         res.json(result.rows);
     }
@@ -43,9 +72,14 @@ app.post('/api/todos', async (req, res) => {
 
     try {
         const result = await client.query(`
-            
+            INSERT INTO todos
+                (task,
+                complete,
+                user_id)
+            VALUES($1, $2, $3)
+            RETURNING *;
         `,
-        [/* pass in data */]);
+        [todo.task, todo.complete, todo.user_id ? todo.user_id : req.userId]);
 
         res.json(result.rows[0]);
     }
@@ -57,15 +91,26 @@ app.post('/api/todos', async (req, res) => {
     }
 });
 
+//PROBABLY SOMETHING WRONG HERE, LIKELY WITH USER_ID AND REQ.USERID
 app.put('/api/todos/:id', async (req, res) => {
     const id = req.params.id;
     const todo = req.body;
 
+    console.log('in the put route');
+    console.log(req.body);
+
     try {
         const result = await client.query(`
+            UPDATE todos
+            SET
+                task = $2,
+                complete = $3
+            WHERE id = $1
             
-        `, [/* pass in data */]);
-     
+            RETURNING *
+        `, [id, todo.task, todo.complete]);
+    
+        //console.log(res.json(result.rows[0]));
         res.json(result.rows[0]);
     }
     catch (err) {
@@ -74,7 +119,7 @@ app.put('/api/todos/:id', async (req, res) => {
             error: err.message || err
         });
     }
-});
+}); 
 
 app.delete('/api/todos/:id', async (req, res) => {
     // get the id that was passed in the route:

@@ -17,8 +17,58 @@ class TodoApp extends Component {
         const loading = new Loading({ loading: true });
         dom.appendChild(loading.renderDOM());
 
+        const addField = new AddTodo({
+            onAdd: async (todoToAdd) => {
+                loading.update({ loading: true });
+                try {
+                    const newlyAddedItem = await addTodo(todoToAdd);
+                    const allToDos = this.state.todos;
+                    allToDos.push(newlyAddedItem);
+                    todoList.update({ allToDos });
+                }
+                catch (err) {
+                    console.log(err);
+                }
+                finally {
+                    loading.update({ loading: false });
+                }
+            }
+        });
+        main.appendChild(addField.renderDOM());
+
+        const todoList = new TodoList({ 
+            todos: [],
+            onUpdate: async (todoToUpdate) => { 
+                loading.update({ loading: true });
+                try {
+                    const updated = await updateTodo(todoToUpdate);
+                    const todos = this.state.todos;
+                    const index = todos.indexOf(todoToUpdate);
+                    todos.splice(index, 1, updated);
+                    todoList.update({ todos });
+                }
+                catch (err) {
+                    console.log(err);
+                }
+                finally {
+                    loading.update({ loading: false });
+                }
+            },
+            onRemove: async (todoToRemove) => {
+                removeTodo(
+
+                );
+            }
+
+        });
+        const todoListDOM = todoList.renderDOM();
+        main.appendChild(todoListDOM);
+
         // initial todo load:
         try {
+            const todos = await getTodos();
+            this.state.todos = todos;
+            todoList.update({ todos });
             
         }
         catch (err) {
