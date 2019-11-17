@@ -1,6 +1,20 @@
 const URL = '/api';
 
+const token = localStorage.getItem('TOKEN');
+if (!token && !(location.pathname === '/' || location.pathname === '/index.html'
+)){
+    const searchParams = new URLSearchParams();
+    searchParams.set('redirect', location.pathname);
+    location = `/?${searchParams.toString()}`;
+}
+
 async function fetchWithError(url, options) {
+    if (token) {
+        options = options || {};
+        options.headers = options.header || {};
+        options.headers.Authentication = token;
+    }
+
     const response = await fetch(url, options);
     const data = await response.json();
 
@@ -46,3 +60,25 @@ export function removeTodo(todoId) {
     
 }
 
+export function signin(credentials) {
+
+}
+
+export function signup(user) {
+    console.log('got to signup');
+    console.log(user);
+    const url = `${URL}/auth/signup`;
+    return fetchWithError(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user)
+    });
+}
+
+export function success(user) {
+    localStorage.setItem('TOKEN', user.token);
+    const searchParams = new URLSearchParams(location.search);
+    location = searchParams.get('redirect') || './todo.html';
+}

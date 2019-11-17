@@ -1,8 +1,14 @@
 import Component from '../Component.js';
 
 class SignIn extends Component {
-    onRender(){
+    onRender(dom){
+        const onSignin = this.props.onSignin;
 
+        const signInButton = dom.querySelector('#signin-submit');
+        signInButton.addEventListener('click', () => {
+            console.log('signin button clicked');
+            onSignin();
+        });
     }
     renderHTML(){
         return /*html*/`

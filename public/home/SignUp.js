@@ -1,7 +1,21 @@
 import Component from '../Component.js';
 
 class SignUp extends Component {
-    onRender() {
+    onRender(dom) {
+        const onSignup = this.props.onSignup;
+
+        const signUpButton = dom.querySelector('#signup-submit');
+        signUpButton.addEventListener('click', () => {
+            const email = dom.querySelector('input[name=signup-email]').value;
+            const password = dom.querySelector('input[name=signup-password').value;
+
+            const user = {
+                email,
+                password
+            };
+
+            onSignup(user);
+        });
 
     }
     renderHTML() {
@@ -16,7 +30,7 @@ class SignUp extends Component {
                     <label name="signup-password">Password</label>
                         <input name="signup-password" type="text">
                 </div>
-                <button id="signup-submit">Sign In</button>
+                <button id="signup-submit">Sign Up</button>
         </section>
         `;
     }
